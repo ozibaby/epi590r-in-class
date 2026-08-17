@@ -148,6 +148,12 @@ tbl_uvregression(
 	method = lm
 )
 
+## this is equivalent to
+# lm(nsibs ~ sex_cat, data = nlsy)
+# lm(sleep_wkdy ~ sex_cat, data = nlsy)
+# lm(sleep_wknd ~ sex_cat, data = nlsy)
+# lm(income ~ sex_cat, data = nlsy)
+
 #Fit a Poisson regression
 # (family = poisson()) for the number of siblings, using at least 3 predictors
 # of your choice. Create a nice table displaying your Poisson regression and its
@@ -155,16 +161,17 @@ tbl_uvregression(
 # parts!) we used for the logistic regression table in the code.
 
 # poisson model
-poisson_model <- glm(glasses ~ eyesight_cat + sex_cat,
+poisson_model <- glm(nsibs ~ eyesight_cat + sex_cat + income,
 											data = nlsy, family = poisson()
 )
 
 tbl_regression(
-	logistic_model,
+	poisson_model,
 	exponentiate = TRUE,
 	label = list(
 		sex_cat ~ "Sex",
-		eyesight_cat ~ "Eyesight"
+		eyesight_cat ~ "Eyesight",
+		income ~ "Income (USD)"
 	)
 )
 
@@ -176,3 +183,60 @@ tbl_regression(
 
 
 # Make a table comparing the logistic and the log-binomial results.
+
+# log-binomial model
+logbinomial_model <- glm(glasses ~ eyesight_cat + sex_cat,
+												 data = nlsy, family = binomial(link = "log")
+)
+
+logistic_table <- tbl_regression(
+	logistic_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	)
+)
+
+logbinomial_table <- tbl_regression(
+	logbinomial_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	)
+)
+
+tbl_merge(list(logistic_table, logbinomial_table),
+					tab_spanner = c("**Logistic**", "**Log-binomial**")
+)
+
+
+## BONUS
+
+logpoisson_model <- glm(glasses ~ eyesight_cat + sex_cat,
+												data = nlsy, family = poisson()
+)
+
+logpoisson_table <- tbl_regression(
+	logpoisson_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	)
+)
+
+logpoisson_table_robust <- tbl_regression(
+	logpoisson_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	),
+	tidy_fun = partial(tidy_robust, vcov = "HC1")
+)
+
+tbl_merge(list(logpoisson_table, logpoisson_table_robust),
+					tab_spanner = c("**W/o**", "**W/ Robust**")
+)
