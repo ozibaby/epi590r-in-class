@@ -1,6 +1,8 @@
 library(tidyverse)
 library(gtsummary)
 
+install.packages("gtsummary", dependencies = TRUE)
+
 # Load and clean data
 nlsy_cols <- c(
   "glasses", "eyesight", "sleep_wkdy", "sleep_wknd",
@@ -18,7 +20,6 @@ nlsy <- read_csv(here::here("data", "raw", "nlsy.csv"),
     eyesight_cat = factor(eyesight, labels = c("Excellent", "Very good", "Good", "Fair", "Poor")),
     glasses_cat = factor(glasses, labels = c("No", "Yes"))
   )
-
 
 # simple table
 tbl_summary(
@@ -81,4 +82,39 @@ tbl_summary(
   # add a caption
   modify_caption("**Participant characteristics**")
 
+# Make a tbl_summary(). Include categorical region, race/ethnicity, income, and
+# the sleep variables (use a helper function to select those) and make sure they
+# are nicely labeled.
 
+tbl_summary(
+	nlsy,
+	by = sex_cat,
+	digits = list(income ~ 3, starts_with("sleep") ~ 1),
+	statistic = list(income ~ "{p10}, {p90}",
+									 starts_with("sleep") ~ "{min}, {max}"),
+	include = c(
+		region_cat, race_eth_cat, income, starts_with("sleep")),
+	label = list(
+		race_eth_cat ~ "Race/ethnicity",
+		income ~ "Income",
+		region_cat ~ "Region",
+		sleep_wknd ~ "Sleep on Weekends",
+		sleep_wkdy ~ "Sleep on Weekdays"
+	),
+	missing_text = "Missing",
+) |>
+
+# Stratify the table by sex. Add a p-value comparing the sexes and an overall
+# column combining both sexes. add_p()
+
+	add_p(test = list(
+		all_continuous() ~ "t.test",
+		all_categorical() ~ "chisq.test"
+	)) |>
+	#add a total colomn with number of obs
+	add_overall(col_label= "**Total** N = {N}")|>
+	modify_footnote_body(
+		footnote = "https://www.nlsinfo.org/content/cohorts/nlsy79/topical-guide/household/race-ethnicity-immigration-data",
+		columns = "label",
+		rows = variable == "race_eth_cat" & row_type == "label"
+	)
