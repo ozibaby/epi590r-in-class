@@ -63,9 +63,85 @@ raise <- function(x, power = 2) {
 	raise_val <- x^power
 	return (raise_val)
 }
+#same
+raise (x = 3, power = 3)
+raise (power = 3, x = 3)
+
+#diff
+raise(2,4)
+raise(4,2)
 
 # test
 raise(x = 5)
 # should give you
 5^2
+```
+
+1.  Create a function that takes a vector of numbers and returns the standard deviation manually (like we did the mean). Use `if` statements to check if the vector has only one (or fewer) elements and return `NA` if so. (Hint: the `length()` function will be helpful!) You don’t need any extra arguments besides the vector of numbers.
+
+sd⁡(𝑥)=√∑𝑛𝑖=1(𝑥𝑖−¯𝑥)2𝑛−1
+
+```{r}
+
+new_sd <- function(x) {
+	demeaned_x <- x - mean(x)
+	squared_demeaned_x <-demeaned_x^2
+	sum_of_squares <- sum(squared_demeaned_x)
+	n_minus_1 <- length(x) - 1
+	std_dev <- sqrt(sum_of_squares / n_minus_1)
+		if (length(x) <= 1) {
+			return(NA)
+		} else {
+		return(std_dev)
+		}
+}
+new_sd(c(345,123,7564,345,123,4653,4346, 346, 76))
+sd(c(123, 6564, 345, 123, 4653, 4346, 346, 76))
+
+x<- c(5, 9)
+
+new_sd(x)
+sd(x)
+```
+
+2.  Modify your function to remove the NA values before calculating the standard deviation. (Hint: the `na.omit()` function will be helpful!) Add an argument `na.rm =` that defaults to `TRUE` (the *opposite* of the `na.rm` argument in the built-in R function `sd()`, which defaults to `FALSE`). If `na.rm = FALSE`, then the function should return `NA` if there are any NA values in the vector.
+
+```{r}
+
+x <- (c(3, 6, 9 , 10))
+
+new_sd <- function(x, na.rm = TRUE) {
+	if (na.rm) {
+		#remove NAs
+		new_x <- na.omit(x)
+	} else {
+		# done remove NAs
+		new_x <- x
+	} #will have a new value of x if NAs are removed, same value it not
+	
+	if (length(new_x) <= 1) {
+		return_val <- NA
+	} else{
+	#ncalculate the std dev using the new x 
+		demeaned_x <- new_x - mean(new_x)
+		squared_demeaned_x <-demeaned_x^2
+		sum_of_squares <- sum(squared_demeaned_x)
+		n_minus_1 <- length(new_x) - 1
+		return_val <- sqrt(sum_of_squares / n_minus_1)
+	}
+	return (return_val)
+}
+
+#new_sd(nlsy$income)
+new_sd(c(1))
+new_sd(c(1, NA, NA))
+new_sd(c(1, 344,556,664,2,4,6,4))
+new_sd(c(1, NA, 344,556,NA,664,2,4,6,4))
+new_sd(c(1, NA, 3,56,666,4323,NA,3))
+```
+
+3.  What is the standard deviation of income in (all of) NLSY? Compare with the built-in R function `sd()`.
+
+```{r}
+
 ```
