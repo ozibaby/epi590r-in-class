@@ -47,3 +47,50 @@ tbl_summary(
   ),
   missing_text = "Missing")
 ```
+
+Description of another Table @tbl-other
+
+```{r}
+#| label: tbl-other
+#| tbl-cap: "Other Table"
+tbl_summary(
+  nlsy,
+  by = sex_cat,
+  include = c(sex_cat, race_eth_cat, region_cat,
+              eyesight_cat, glasses, age_bir))
+```
+
+There were a lot of people who slept (@tbl-one).
+
+```{r}
+#| message: false
+#| label: tbl-one
+#| tbl-cap: "Descriptive Statistics including sleep"
+
+sleep_table <- tbl_summary(
+  nlsy,
+  by = region_cat,
+  include = c(sex_cat, race_eth_cat,
+              sleep_wkdy, sleep_wknd)) |>
+	add_overall()
+
+sleep_table
+```
+
+```{r}
+median(nlsy$sleep_wknd, na.rm = TRUE)
+```
+
+```{r}
+  med_sleep <- median(nlsy$sleep_wknd, na.rm = TRUE)
+```
+
+
+```{r}
+#sleep_table$table_body
+inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")
+
+#inline_text(sleep_table, variable = "sex_cat", level = "Female", column = "stat_0")
+```
+
+In the sample, the average sleep on weekends was `r inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")`.
