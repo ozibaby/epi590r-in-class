@@ -132,7 +132,7 @@ new_sd <- function(x, na.rm = TRUE) {
 	return (return_val)
 }
 
-#new_sd(nlsy$income)
+new_sd(nlsy$income)
 new_sd(c(1))
 new_sd(c(1, NA, NA))
 new_sd(c(1, 344,556,664,2,4,6,4))
@@ -142,6 +142,6 @@ new_sd(c(1, NA, 3,56,666,4323,NA,3))
 
 3.  What is the standard deviation of income in (all of) NLSY? Compare with the built-in R function `sd()`.
 
-```{r}
-
+```         
+12506.82
 ```
