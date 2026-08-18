@@ -133,8 +133,37 @@ coef(fit_income(nlsy, c("age_bir", "sex_cat", "race_eth_cat")))
 #    and 75% percentile of a variable using {{ }}.
 #    Test it on income, age_bir, and nsibs.
 
+
+summarize_var_new <- function(data, variable) {
+	data |>
+		summarise(
+			median = median({{ variable }}, na.rm = TRUE),
+			pctl_25 = quantile({{ variable }}, p = .25,na.rm = TRUE), #{p25}
+			pctl_75 = quantile({{ variable }}, p = .75,na.rm = TRUE)
+		)
+}
+
+# test on a few variables
+summarize_var_new(nlsy, income)
+summarize_var_new(nlsy, age_bir)
+summarize_var_new(nlsy, nsibs)
+
+
 # 2. Add a `group` argument using .by = {{ group }}, with a default so that
 #    the function still works when you don't pass a group.
+
+summarize_var_new <- function(data, variable, group = NULL) {
+	data |>
+		summarise(
+			median = median({{ variable }}, na.rm = TRUE),
+			pctl_25 = quantile({{ variable }}, p = .25,na.rm = TRUE), #{p25}
+			pctl_75 = quantile({{ variable }}, p = .75,na.rm = TRUE),
+			.by = {{group}}
+		)
+}
+summarize_var_new(nlsy, income, region_cat)
+summarize_var_new(nlsy, income) # should still work
+
 
 # 3. Write a function summarize_two_vars() that takes a dataset and two variables and
 #    returns their correlation and covariance. Use {{ }} to pass the variables. Test it
