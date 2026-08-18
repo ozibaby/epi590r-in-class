@@ -86,6 +86,8 @@ median(nlsy$sleep_wknd, na.rm = TRUE)
 ```
 
 
+The Median number of hours of sleep on the weekend was `r med_sleep`.
+
 ```{r}
 #sleep_table$table_body
 inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")
@@ -93,4 +95,4 @@ inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")
 #inline_text(sleep_table, variable = "sex_cat", level = "Female", column = "stat_0")
 ```
 
-In the sample, the average sleep on weekends was `r inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")`.
+In the sample, the average hours of sleep on weekends was `r inline_text(sleep_table, variable = "sleep_wknd", column = "stat_0")`.
