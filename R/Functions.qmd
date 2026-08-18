@@ -12,23 +12,60 @@ Quarto enables you to weave together content and executable code into a finished
 
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
+\# start out with a number to test
+x \<- 3
+# you'll want your function to return this number
+x\^2
+square \<- **function**(...) {
+...
+}
+# test it out
+square(x)
+square(53)
+53\^2 \# does this match?
+
+Creating a square function
+
 ```{r}
-x <- 5
+# define x first, save new name for the x^2, then return the new value
+x <- 3
 square <- function(x) {
 	square1 <- x ^ 2
 	return(square1)
 }
 
-square(7)
+#calling this out to 
+square(x)
 square(53)
 53^2
 ```
 
-You can add options to executable code like this
+1.  Write a function to raise to any power. You don’t just want to square numbers, you want to raise them to higher powers too. Make a function that uses two arguments, `x` for a number, and `power` for the power. Call it `raise()`.
 
 ```{r}
-#| echo: false
-2 * 2
+
+raise <- function(x, power) {
+	raise_val <- x^power
+	return (raise_val)
+}
+
+# test with
+raise(x = 6, power = 2)
+# should give you
+6^2
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+2.  Change your `raise()` function to default to squaring `x` when the user doesn’t enter a value for `power`.
+
+```{r}
+#to make the power default include the number you want equal to the power
+raise <- function(x, power = 2) {
+	raise_val <- x^power
+	return (raise_val)
+}
+
+# test
+raise(x = 5)
+# should give you
+5^2
+```
